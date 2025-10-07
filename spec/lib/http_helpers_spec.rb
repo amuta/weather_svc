@@ -34,4 +34,11 @@ RSpec.describe HttpHelpers do
     json = HttpHelpers.get_json(URI(url))
     expect(json["ok"]).to eq(true)
   end
+
+  it "uses UA with optional contact" do
+    stub_const("ENV", ENV.to_hash.merge("HTTP_USER_AGENT" => "ua", "CONTACT_EMAIL" => "c@e"))
+    stub_request(:get, "https://example.org/data").with(headers: { "User-Agent" => "ua (contact: c@e)" })
+      .to_return(status: 200, body: "{}")
+    HttpHelpers.get_json(URI("https://example.org/data"))
+  end
 end
