@@ -17,6 +17,7 @@ group :development, :test do
   gem "rspec-rails", "~> 7.1"
   gem "webmock"
   gem "vcr"
+  gem "simplecov", require: false
 
   gem "dotenv-rails"
 end

@@ -17,12 +17,15 @@ RSpec.describe Forecast do
         low_c: 20.0,
         daily: [
           { date: '2025-10-07', max_c: 29.0, min_c: 20.0 }
-        ]
+        ],
+        hourly: [
+          { time: '2025-10-07T00:00', temp_c: 22.0 }
+        ],
+        issued_at: '2025-10-07T12:00:00Z'
       }
     end
 
     before do
-      allow(Rails.cache).to receive(:exist?).and_return(false)
       allow(Rails.cache).to receive(:fetch).and_yield
       allow(OpenMeteoClient).to receive(:forecast).with(lat: '-22.9068', lon: '-43.1729').and_return(weather_data)
     end
@@ -36,6 +39,8 @@ RSpec.describe Forecast do
       expect(forecast.high_c).to eq(29.0)
       expect(forecast.low_c).to eq(20.0)
       expect(forecast.daily).to be_an(Array)
+      expect(forecast.hourly).to be_an(Array)
+      expect(forecast.issued_at).to eq('2025-10-07T12:00:00Z')
       expect(forecast.cached).to eq(false)
     end
 
@@ -48,7 +53,7 @@ RSpec.describe Forecast do
     it 'sets cached=false on miss and cached=true on hit' do
       with_memory_cache do
         allow(OpenMeteoClient).to receive(:forecast).and_return(
-          { current_c: 1.2, high_c: 3.4, low_c: 0.5, daily: [] }
+          { current_c: 1.2, high_c: 3.4, low_c: 0.5, daily: [], hourly: [], issued_at: '2025-10-07T12:00:00Z' }
         )
 
         first  = Forecast.fetch_by_location(lat: '-22', lon: '-43', zip: '99999-test')
@@ -68,6 +73,8 @@ RSpec.describe Forecast do
         high_c: 29.0,
         low_c: 20.0,
         daily: [{ date: '2025-10-07', max_c: 29.0, min_c: 20.0 }],
+        hourly: [{ time: '2025-10-07T00:00', temp_c: 22.0 }],
+        issued_at: '2025-10-07T12:00:00Z',
         cached: false
       )
     end
@@ -81,6 +88,8 @@ RSpec.describe Forecast do
         high_c: 29.0,
         low_c: 20.0,
         daily: [{ date: '2025-10-07', max_c: 29.0, min_c: 20.0 }],
+        hourly: [{ time: '2025-10-07T00:00', temp_c: 22.0 }],
+        issued_at: '2025-10-07T12:00:00Z',
         cached: false
       })
     end

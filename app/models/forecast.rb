@@ -1,12 +1,14 @@
 class Forecast
-  attr_reader :zip, :current_c, :high_c, :low_c, :daily, :cached
+  attr_reader :zip, :current_c, :high_c, :low_c, :daily, :hourly, :issued_at, :cached
 
-  def initialize(zip:, current_c:, high_c:, low_c:, daily:, cached: false)
+  def initialize(zip:, current_c:, high_c:, low_c:, daily:, hourly:, issued_at:, cached: false)
     @zip = zip
     @current_c = current_c
     @high_c = high_c
     @low_c = low_c
     @daily = daily
+    @hourly = hourly
+    @issued_at = issued_at
     @cached = cached
   end
 
@@ -15,8 +17,8 @@ class Forecast
     data, cached = Cache.fetch(:forecast, zip, ttl: AppConfig.forecast_ttl_s, race_condition_ttl: AppConfig.forecast_race_ttl_s) do
       OpenMeteoClient.forecast(lat: location[:lat], lon: location[:lon])
     end
-    new(zip:, current_c: data[:current_c], high_c: data[:high_c], low_c: data[:low_c], daily: data[:daily], cached:)
+    new(zip:, **data, cached:)
   end
 
-  def to_h = { zip:, current_c:, high_c:, low_c:, daily:, cached: }
+  def to_h = { zip:, current_c:, high_c:, low_c:, daily:, hourly:, issued_at:, cached: }
 end

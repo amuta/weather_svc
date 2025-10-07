@@ -17,6 +17,8 @@ RSpec.describe ForecastService do
         high_c: 29.0,
         low_c: 20.0,
         daily: [{ date: '2025-10-07', max_c: 29.0, min_c: 20.0 }],
+        hourly: [{ time: '2025-10-07T00:00', temp_c: 22.0 }],
+        issued_at: '2025-10-07T12:00:00Z',
         cached: false
       )
     end
