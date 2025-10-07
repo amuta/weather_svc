@@ -41,4 +41,18 @@ RSpec.describe HttpHelpers do
       .to_return(status: 200, body: "{}")
     HttpHelpers.get_json(URI("https://example.org/data"))
   end
+
+  it "stops on redirect loop" do
+    stub_request(:get, url).to_return(status: 302, headers: { "Location" => url })
+    expect {
+      HttpHelpers.get_json(URI(url))
+    }.to raise_error(HttpHelpers::HttpError)
+  end
+
+  it "raises on invalid JSON" do
+    stub_request(:get, url).to_return(status: 200, body: "{")
+    expect {
+      HttpHelpers.get_json(URI(url))
+    }.to raise_error(JSON::ParserError)
+  end
 end
