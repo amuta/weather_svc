@@ -3,7 +3,7 @@ class ForecastsController < ApplicationController
     address = params[:address].to_s.strip
     return render json: { error: "address required" }, status: 400 if address.empty?
 
-    result = WeatherFetcher.call(address)
+    result = ForecastService.call(address)
     status = result[:error] ? 502 : 200
     render json: result, status: status
   end
