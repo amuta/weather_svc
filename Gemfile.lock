@@ -222,6 +222,8 @@ GEM
       concurrent-ruby (~> 1.0)
     uri (1.0.4)
     useragent (0.16.11)
+    vcr (6.3.1)
+      base64
     webmock (3.25.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -249,6 +251,7 @@ DEPENDENCIES
   rails (~> 8.0.3)
   rspec-rails (~> 7.1)
   tzinfo-data
+  vcr
   webmock
 
 BUNDLED WITH

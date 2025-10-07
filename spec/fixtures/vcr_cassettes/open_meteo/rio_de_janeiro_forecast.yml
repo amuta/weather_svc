@@ -1,0 +1,36 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.open-meteo.com/v1/forecast?current_weather=true&daily=temperature_2m_max,temperature_2m_min&latitude=-22.9068&longitude=-43.1729&timezone=auto
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rails-weather-assessment
+      Host:
+      - api.open-meteo.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 07 Oct 2025 19:47:01 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJsYXRpdHVkZSI6LTIyLjc1LCJsb25naXR1ZGUiOi00My4wLCJnZW5lcmF0aW9udGltZV9tcyI6MC4wNzA5Mjk1MjcyODI3MTQ4NCwidXRjX29mZnNldF9zZWNvbmRzIjotMTA4MDAsInRpbWV6b25lIjoiQW1lcmljYS9TYW9fUGF1bG8iLCJ0aW1lem9uZV9hYmJyZXZpYXRpb24iOiJHTVQtMyIsImVsZXZhdGlvbiI6MTIuMCwiY3VycmVudF93ZWF0aGVyX3VuaXRzIjp7InRpbWUiOiJpc284NjAxIiwiaW50ZXJ2YWwiOiJzZWNvbmRzIiwidGVtcGVyYXR1cmUiOiLCsEMiLCJ3aW5kc3BlZWQiOiJrbS9oIiwid2luZGRpcmVjdGlvbiI6IsKwIiwiaXNfZGF5IjoiIiwid2VhdGhlcmNvZGUiOiJ3bW8gY29kZSJ9LCJjdXJyZW50X3dlYXRoZXIiOnsidGltZSI6IjIwMjUtMTAtMDdUMTY6NDUiLCJpbnRlcnZhbCI6OTAwLCJ0ZW1wZXJhdHVyZSI6MjUuMCwid2luZHNwZWVkIjoxNC44LCJ3aW5kZGlyZWN0aW9uIjoyMjcsImlzX2RheSI6MSwid2VhdGhlcmNvZGUiOjgwfSwiZGFpbHlfdW5pdHMiOnsidGltZSI6Imlzbzg2MDEiLCJ0ZW1wZXJhdHVyZV8ybV9tYXgiOiLCsEMiLCJ0ZW1wZXJhdHVyZV8ybV9taW4iOiLCsEMifSwiZGFpbHkiOnsidGltZSI6WyIyMDI1LTEwLTA3IiwiMjAyNS0xMC0wOCIsIjIwMjUtMTAtMDkiLCIyMDI1LTEwLTEwIiwiMjAyNS0xMC0xMSIsIjIwMjUtMTAtMTIiLCIyMDI1LTEwLTEzIl0sInRlbXBlcmF0dXJlXzJtX21heCI6WzMwLjUsMjMuMiwyMC42LDI1LjcsMjYuOCwzMS40LDMzLjJdLCJ0ZW1wZXJhdHVyZV8ybV9taW4iOlsyMi43LDIwLjQsMTkuMywxOS41LDIxLjcsMjAuOCwyMy42XX19
+  recorded_at: Tue, 07 Oct 2025 19:47:01 GMT
+recorded_with: VCR 6.3.1

@@ -5,23 +5,23 @@ RSpec.describe GeocodeService do
     context 'when address is found' do
       let(:nominatim_result) do
         {
-          lat: '37.3230',
-          lon: '-122.0322',
-          zip: '95014'
+          lat: '-22.9068',
+          lon: '-43.1729',
+          zip: '20000-000'
         }
       end
 
       before do
-        allow(NominatimClient).to receive(:lookup).with('Cupertino, CA').and_return(nominatim_result)
+        allow(NominatimClient).to receive(:lookup).with('Rio de Janeiro, RJ, Brazil').and_return(nominatim_result)
       end
 
       it 'returns location data with lat, lon, and zip' do
-        result = GeocodeService.call('Cupertino, CA')
+        result = GeocodeService.call('Rio de Janeiro, RJ, Brazil')
 
         expect(result).to eq({
-          lat: '37.3230',
-          lon: '-122.0322',
-          zip: '95014'
+          lat: '-22.9068',
+          lon: '-43.1729',
+          zip: '20000-000'
         })
       end
     end

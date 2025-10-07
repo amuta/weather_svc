@@ -16,4 +16,5 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "rspec-rails", "~> 7.1"
   gem "webmock"
+  gem "vcr"
 end

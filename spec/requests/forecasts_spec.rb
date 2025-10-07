@@ -19,27 +19,27 @@ RSpec.describe 'Forecasts API', type: :request do
     context 'when address is provided' do
       let(:weather_result) do
         {
-          current_c: 15.5,
-          high_c: 20.0,
-          low_c: 10.0,
-          zip: '94014',
+          current_c: 26.5,
+          high_c: 29.0,
+          low_c: 20.0,
+          zip: '20000-000',
           cached: false,
           daily: [
-            { date: '2025-10-07', max_c: 20.0, min_c: 10.0 }
+            { date: '2025-10-07', max_c: 29.0, min_c: 20.0 }
           ]
         }
       end
 
       before do
-        allow(ForecastService).to receive(:call).with('Cupertino, CA').and_return(weather_result)
+        allow(ForecastService).to receive(:call).with('Rio de Janeiro, RJ, Brazil').and_return(weather_result)
       end
 
       it 'returns 200 with weather data' do
-        get '/api/forecast', params: { address: 'Cupertino, CA' }
+        get '/api/forecast', params: { address: 'Rio de Janeiro, RJ, Brazil' }
         expect(response).to have_http_status(200)
         json = JSON.parse(response.body, symbolize_names: true)
-        expect(json[:current_c]).to eq(15.5)
-        expect(json[:zip]).to eq('94014')
+        expect(json[:current_c]).to eq(26.5)
+        expect(json[:zip]).to eq('20000-000')
       end
     end
 
