@@ -3,10 +3,11 @@ require "uri"
 require "json"
 
 class OpenMeteoClient
-  UA = "rails-weather-assessment"
+  BASE_URL = "https://api.open-meteo.com/v1/forecast"
+  USER_AGENT = "rails-weather-assessment"
 
   def self.forecast(lat:, lon:)
-    uri = URI("https://api.open-meteo.com/v1/forecast")
+    uri = URI(BASE_URL)
     uri.query = URI.encode_www_form(
       latitude: lat, longitude: lon, current_weather: true,
       daily: "temperature_2m_max,temperature_2m_min", timezone: "auto"
@@ -27,7 +28,7 @@ class OpenMeteoClient
 
   def self.get_json(uri)
     req = Net::HTTP::Get.new(uri)
-    req["User-Agent"] = UA
+    req["User-Agent"] = USER_AGENT
     Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
       res = http.request(req)
       raise "open-meteo #{res.code}" unless res.is_a?(Net::HTTPSuccess)

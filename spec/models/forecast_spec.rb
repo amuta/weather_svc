@@ -40,7 +40,7 @@ RSpec.describe Forecast do
     end
 
     it 'caches forecast by zip code' do
-      expect(Rails.cache).to receive(:fetch).with('forecast:20000-000', expires_in: 30.minutes, race_condition_ttl: 5.minutes)
+      expect(Cache).to receive(:fetch).with(:forecast, '20000-000', ttl: 30.minutes, race_condition_ttl: 5.minutes).and_call_original
 
       Forecast.fetch_by_location(location)
     end
