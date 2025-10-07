@@ -1,31 +1,16 @@
-require "net/http"
 require "uri"
-require "json"
+require_relative "../http_helpers"
 
 class NominatimClient
   BASE_URL = "https://nominatim.openstreetmap.org/search"
-  USER_AGENT = "rails-weather-assessment"
+  USER_AGENT = "rails-weather-assessment (contact: you@example.com)"
 
   def self.lookup(q)
     uri = URI(BASE_URL)
-    uri.query = URI.encode_www_form(format: "jsonv2", addressdetails: 1, q: q)
-    j = get_json(uri)
+    uri.query = URI.encode_www_form(format: "jsonv2", addressdetails: 1, q:)
+    j = HttpHelpers.get_json(uri, headers: { "User-Agent" => USER_AGENT })
     f = j&.first
     return nil unless f
-    {
-      lat: f["lat"],
-      lon: f["lon"],
-      zip: f.dig("address", "postcode")
-    }
-  end
-
-  def self.get_json(uri)
-    req = Net::HTTP::Get.new(uri)
-    req["User-Agent"] = USER_AGENT
-    Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
-      res = http.request(req)
-      raise "nominatim #{res.code}" unless res.is_a?(Net::HTTPSuccess)
-      JSON.parse(res.body)
-    end
+    { lat: f["lat"], lon: f["lon"], zip: f.dig("address", "postcode") }
   end
 end
