@@ -34,7 +34,8 @@ RSpec.describe 'Forecasts API', type: :request do
       end
 
       before do
-        allow(ForecastService).to receive(:call).with('Rio de Janeiro, RJ, Brazil', include_hourly: false).and_return(forecast)
+        allow(ForecastService).to receive(:call).with('Rio de Janeiro, RJ, Brazil',
+                                                      include_hourly: false).and_return(forecast)
       end
 
       it 'returns 200 with weather data' do

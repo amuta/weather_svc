@@ -1,4 +1,4 @@
-require "json"
+require 'json'
 
 class JsonFormatter < Logger::Formatter
   def call(severity, time, progname, msg)

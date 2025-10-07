@@ -24,7 +24,7 @@ RSpec.describe OpenMeteoClient do
         'timezone' => 'UTC',
         'current_weather' => { 'temperature' => 25.0, 'time' => '2025-10-07T10:00' },
         'daily' => {
-          'time' => ['2025-10-07', 'invalid-date', '2025-10-09'],
+          'time' => %w[2025-10-07 invalid-date 2025-10-09],
           'temperature_2m_max' => [29.0, 31.0, 28.0],
           'temperature_2m_min' => [20.0, 19.0, 18.0]
         },
@@ -33,7 +33,7 @@ RSpec.describe OpenMeteoClient do
       allow(HttpHelpers).to receive(:get_json).and_return(body)
       r = OpenMeteoClient.forecast(lat: '0', lon: '0')
       expect(r[:daily].length).to eq(2)
-      expect(r[:daily].map { |d| d[:date] }).to eq(['2025-10-07', '2025-10-09'])
+      expect(r[:daily].map { |d| d[:date] }).to eq(%w[2025-10-07 2025-10-09])
     end
 
     it 'handles nil issued_at without timezone error' do

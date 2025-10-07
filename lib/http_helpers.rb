@@ -19,7 +19,7 @@ module HttpHelpers
                read_timeout: AppConfig.http_read_timeout, retries: AppConfig.http_retries,
                redirects: AppConfig.http_redirects)
     payload = { uri: uri.to_s, retries:, redirects: }
-    ActiveSupport::Notifications.instrument("http.get", payload) do
+    ActiveSupport::Notifications.instrument('http.get', payload) do
       attempt = 0
       begin
         attempt += 1

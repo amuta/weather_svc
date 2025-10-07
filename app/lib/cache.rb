@@ -8,7 +8,7 @@ module Cache
   def self.fetch(area, id, ttl:, race_condition_ttl: nil)
     ran = false
     cache_key = key(area, id)
-    ActiveSupport::Notifications.instrument("cache.fetch", area:, key: cache_key, ttl:) do |payload|
+    ActiveSupport::Notifications.instrument('cache.fetch', area:, key: cache_key, ttl:) do |payload|
       value = Rails.cache.fetch(cache_key, expires_in: ttl, race_condition_ttl:) do
         ran = true
         yield

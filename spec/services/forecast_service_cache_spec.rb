@@ -24,7 +24,7 @@ RSpec.describe ForecastService do
     stub_forecast_ttls(main: 30.minutes, race: 5.minutes)
     allow(GeocodeService).to receive(:call).and_return({ lat: '1', lon: '2', zip: 'Z' })
     expect(Cache).to receive(:fetch).with(:forecast, 'Z',
-      ttl: 30.minutes, race_condition_ttl: 5.minutes).and_call_original
+                                          ttl: 30.minutes, race_condition_ttl: 5.minutes).and_call_original
     allow(OpenMeteoClient).to receive(:forecast).and_return(
       { current_c: 0, high_c: 0, low_c: 0, daily: [], hourly: [], issued_at: 't' }
     )
