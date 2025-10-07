@@ -20,7 +20,7 @@ curl "http://localhost:3000/api/forecast?address=1600+Pennsylvania+Avenue+NW,+Wa
 * [x] **Cache indicator**: body `cached: true|false`, header `X-Cache: HIT|MISS`.
 * [x] **HTTP caching headers**: `Cache-Control: public, max-age=1800`.
 * [x] **Error handling**: `400` invalid input, `404` not found/no zip, `502` upstream.
-* [x] **Tests**: request + unit + client parsing + VCR; SimpleCov 100% lines.
+* [x] **Tests**: request + unit + client parsing + VCR; SimpleCov 99%+ lines.
 
 ## Requirements
 
