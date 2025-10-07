@@ -20,12 +20,7 @@ class OpenMeteoClient
     tz        = ActiveSupport::TimeZone[tzname] || ActiveSupport::TimeZone['UTC']
     issued_at = j.dig('current_weather', 'time')
 
-    issued_date =
-      begin
-        issued_at ? tz.parse(issued_at)&.to_date : nil
-      rescue ArgumentError, TypeError
-        nil
-      end
+    issued_date = issued_at ? tz.parse(issued_at)&.to_date : nil
 
     dates_s = j.dig('daily', 'time') || []
     highs   = j.dig('daily', 'temperature_2m_max') || []
