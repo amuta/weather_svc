@@ -1,15 +1,26 @@
 class ForecastsController < ApplicationController
+  before_action :validate_query!, only: :show
+
   def show
-    address = params[:address].to_s.strip
-    return render json: { error: "address required" }, status: 400 if address.empty?
+    include_hourly = params[:hourly].to_s == "true"
+    forecast = ForecastService.call(@address, include_hourly: include_hourly)
+    payload  = forecast.to_h
 
-    want_hourly = ActiveModel::Type::Boolean.new.cast(params[:hourly])
-    result = ForecastService.call(address)
-    status = result[:error] ? 502 : 200
+    response.headers["Cache-Control"] = "public, max-age=#{AppConfig.forecast_ttl_s}"
+    response.headers["X-Cache"] = payload[:cached] ? "HIT" : "MISS"
+    render json: payload, status: 200
+  end
 
-    result = result.dup
-    result.delete(:hourly) unless want_hourly
+  private
 
-    render json: result, status: status
+  def validate_query!
+    addr = params[:address].to_s.strip
+    raise Errors::BadRequest, "address required or too long" if addr.empty? || addr.length > 512
+
+    if params.key?(:hourly) && !%w[true false].include?(params[:hourly].to_s)
+      raise Errors::BadRequest, "hourly must be true|false"
+    end
+
+    @address = addr
   end
 end

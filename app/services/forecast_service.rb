@@ -1,11 +1,7 @@
 class ForecastService
-  def self.call(address)
+  def self.call(address, include_hourly: false)
     location = GeocodeService.call(address)
-    return { error: "address not found" } unless location
-
-    forecast = Forecast.fetch_by_location(location)
+    forecast = Forecast.fetch_by_location(location, include_hourly: include_hourly)
     forecast.to_h
-  rescue => e
-    { error: e.message }
   end
 end

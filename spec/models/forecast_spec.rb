@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Forecast do
+  include AppConfigHelper
   describe '.fetch_by_location' do
     let(:location) do
       {
@@ -26,12 +27,11 @@ RSpec.describe Forecast do
     end
 
     before do
-      allow(Rails.cache).to receive(:fetch).and_yield
       allow(OpenMeteoClient).to receive(:forecast).with(lat: '-22.9068', lon: '-43.1729').and_return(weather_data)
     end
 
     it 'returns a Forecast instance' do
-      forecast = Forecast.fetch_by_location(location)
+      forecast = Forecast.fetch_by_location(location, include_hourly: true)
 
       expect(forecast).to be_a(Forecast)
       expect(forecast.zip).to eq('20000-000')
@@ -45,6 +45,7 @@ RSpec.describe Forecast do
     end
 
     it 'caches forecast by zip code' do
+      stub_forecast_ttls(main: 30.minutes, race: 5.minutes)
       expect(Cache).to receive(:fetch).with(:forecast, '20000-000', ttl: 30.minutes, race_condition_ttl: 5.minutes).and_call_original
 
       Forecast.fetch_by_location(location)
@@ -56,8 +57,8 @@ RSpec.describe Forecast do
           { current_c: 1.2, high_c: 3.4, low_c: 0.5, daily: [], hourly: [], issued_at: '2025-10-07T12:00:00Z' }
         )
 
-        first  = Forecast.fetch_by_location(lat: '-22', lon: '-43', zip: '99999-test')
-        second = Forecast.fetch_by_location(lat: '-22', lon: '-43', zip: '99999-test')
+        first  = Forecast.fetch_by_location({ lat: '-22', lon: '-43', zip: '99999-test' })
+        second = Forecast.fetch_by_location({ lat: '-22', lon: '-43', zip: '99999-test' })
 
         expect(first.cached).to eq(false)
         expect(second.cached).to eq(true)

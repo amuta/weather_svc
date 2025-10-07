@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://nominatim.openstreetmap.org/search?addressdetails=1&format=jsonv2&q=XYZ%20Invalid%20Address%20123456789
+    uri: https://nominatim.openstreetmap.org/search?addressdetails=1&format=jsonv2&limit=1&q=XYZ%20Invalid%20Address%20123456789
     body:
       encoding: US-ASCII
       string: ''
@@ -10,7 +10,7 @@ http_interactions:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - "*/*"
+      - application/json
       User-Agent:
       - rails-weather-assessment
       Host:
@@ -23,7 +23,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Tue, 07 Oct 2025 19:46:58 GMT
+      - Tue, 07 Oct 2025 21:31:53 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -37,5 +37,5 @@ http_interactions:
     body:
       encoding: UTF-8
       string: "[]"
-  recorded_at: Tue, 07 Oct 2025 19:46:58 GMT
+  recorded_at: Tue, 07 Oct 2025 21:31:53 GMT
 recorded_with: VCR 6.3.1

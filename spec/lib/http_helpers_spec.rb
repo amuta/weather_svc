@@ -55,4 +55,20 @@ RSpec.describe HttpHelpers do
       HttpHelpers.get_json(URI(url))
     }.to raise_error(JSON::ParserError)
   end
+
+  it "raises after exhausting retries on persistent timeout" do
+    stub_request(:get, url).to_timeout
+    expect {
+      HttpHelpers.get_json(URI(url))
+    }.to raise_error(Timeout::Error)
+  end
+
+  it "retries on connection reset" do
+    stub_request(:get, url)
+      .to_raise(Errno::ECONNRESET).then
+      .to_return(status: 200, body: { ok: true }.to_json)
+
+    json = HttpHelpers.get_json(URI(url))
+    expect(json["ok"]).to eq(true)
+  end
 end

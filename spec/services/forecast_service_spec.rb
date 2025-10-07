@@ -26,7 +26,7 @@ RSpec.describe ForecastService do
     context 'when address is successfully geocoded' do
       before do
         allow(GeocodeService).to receive(:call).with('Rio de Janeiro, RJ, Brazil').and_return(location)
-        allow(Forecast).to receive(:fetch_by_location).with(location).and_return(forecast)
+        allow(Forecast).to receive(:fetch_by_location).and_return(forecast)
       end
 
       it 'returns weather data hash' do
@@ -38,30 +38,6 @@ RSpec.describe ForecastService do
         expect(result[:zip]).to eq('20000-000')
         expect(result[:cached]).to eq(false)
         expect(result[:daily]).to be_an(Array)
-      end
-    end
-
-    context 'when address is not found' do
-      before do
-        allow(GeocodeService).to receive(:call).and_return(nil)
-      end
-
-      it 'returns error message' do
-        result = ForecastService.call('Invalid Address')
-
-        expect(result).to eq({ error: 'address not found' })
-      end
-    end
-
-    context 'when an error occurs' do
-      before do
-        allow(GeocodeService).to receive(:call).and_raise(StandardError.new('Service error'))
-      end
-
-      it 'returns error message' do
-        result = ForecastService.call('Test Address')
-
-        expect(result).to eq({ error: 'Service error' })
       end
     end
   end
