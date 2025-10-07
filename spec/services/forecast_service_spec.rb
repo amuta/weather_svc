@@ -40,5 +40,28 @@ RSpec.describe ForecastService do
         expect(result[:daily]).to be_an(Array)
       end
     end
+
+    context 'when HttpHelpers::HttpError is raised' do
+      before do
+        response = instance_double(Net::HTTPResponse)
+        allow(GeocodeService).to receive(:call).and_raise(HttpHelpers::HttpError.new('API unavailable', response))
+      end
+
+      it 'raises Errors::Upstream' do
+        expect { ForecastService.call('Rio de Janeiro, RJ, Brazil') }
+          .to raise_error(Errors::Upstream, 'API unavailable')
+      end
+    end
+
+    context 'when Timeout::Error is raised' do
+      before do
+        allow(GeocodeService).to receive(:call).and_raise(Timeout::Error, 'Request timed out')
+      end
+
+      it 'raises Errors::Upstream' do
+        expect { ForecastService.call('Rio de Janeiro, RJ, Brazil') }
+          .to raise_error(Errors::Upstream, 'Request timed out')
+      end
+    end
   end
 end
