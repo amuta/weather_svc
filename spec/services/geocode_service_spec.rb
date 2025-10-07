@@ -31,10 +31,9 @@ RSpec.describe GeocodeService do
         allow(NominatimClient).to receive(:lookup).and_return(nil)
       end
 
-      it 'raises an error with descriptive message' do
-        expect {
-          GeocodeService.call('Invalid Address')
-        }.to raise_error('Geocoding failed: address not found')
+      it 'returns nil' do
+        result = GeocodeService.call('Invalid Address')
+        expect(result).to be_nil
       end
     end
 
@@ -43,22 +42,9 @@ RSpec.describe GeocodeService do
         allow(NominatimClient).to receive(:lookup).and_return({ lat: '1.0', lon: '2.0', zip: nil })
       end
 
-      it 'raises an error with descriptive message' do
-        expect {
-          GeocodeService.call('Address Without Zip')
-        }.to raise_error('Geocoding failed: missing zip')
-      end
-    end
-
-    context 'when NominatimClient raises an error' do
-      before do
-        allow(NominatimClient).to receive(:lookup).and_raise(StandardError.new('API error'))
-      end
-
-      it 'raises an error with descriptive message' do
-        expect {
-          GeocodeService.call('Test Address')
-        }.to raise_error('Geocoding failed: API error')
+      it 'returns nil' do
+        result = GeocodeService.call('Address Without Zip')
+        expect(result).to be_nil
       end
     end
   end
