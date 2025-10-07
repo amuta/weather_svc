@@ -31,7 +31,11 @@ class OpenMeteoClient
     highs   = j.dig('daily', 'temperature_2m_max') || []
     lows    = j.dig('daily', 'temperature_2m_min') || []
 
-    dates = dates_s.map { |s| Date.iso8601(s) rescue nil }.compact
+    dates = dates_s.map do |s|
+      Date.iso8601(s)
+    rescue StandardError
+      nil
+    end.compact
     idx = pick_daily_index(dates, issued_date)
 
     daily = dates.each_with_index.map { |d, i| { date: d.iso8601, max_c: highs[i], min_c: lows[i] } }

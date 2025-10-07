@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
   rescue_from Errors::BadRequest, with: :handle_bad_request
   rescue_from Errors::NotFound, with: :handle_not_found
-  rescue_from Errors::Upstream, HttpHelpers::HttpError, with: :handle_upstream_error
+  rescue_from Errors::Upstream, with: :handle_upstream_error
 
   private
 

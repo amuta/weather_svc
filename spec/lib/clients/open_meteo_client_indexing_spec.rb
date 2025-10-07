@@ -12,13 +12,14 @@ RSpec.describe OpenMeteoClient do
       },
       'hourly' => { 'time' => [], 'temperature_2m' => [] }
     }.to_json
-    stub_request(:get, /open-meteo/).to_return(status: 200, body: body, headers: { 'Content-Type' => 'application/json' })
+    stub_request(:get, /open-meteo/).to_return(status: 200, body: body,
+                                               headers: { 'Content-Type' => 'application/json' })
     r = described_class.forecast(lat: '0', lon: '0')
     expect(r[:high_c]).to eq(29.0)
     expect(r[:low_c]).to  eq(20.0)
   end
 
-  it "chooses first daily if issued_date precedes range" do
+  it 'chooses first daily if issued_date precedes range' do
     body = {
       'timezone' => 'UTC',
       'current_weather' => { 'temperature' => 25.0, 'time' => '2025-10-05T10:00' },
@@ -29,13 +30,14 @@ RSpec.describe OpenMeteoClient do
       },
       'hourly' => { 'time' => [], 'temperature_2m' => [] }
     }.to_json
-    stub_request(:get, /open-meteo/).to_return(status: 200, body: body, headers: { 'Content-Type' => 'application/json' })
+    stub_request(:get, /open-meteo/).to_return(status: 200, body: body,
+                                               headers: { 'Content-Type' => 'application/json' })
     r = described_class.forecast(lat: '0', lon: '0')
     expect(r[:high_c]).to eq(28.0)
     expect(r[:low_c]).to  eq(18.0)
   end
 
-  it "chooses last daily if issued_date exceeds range" do
+  it 'chooses last daily if issued_date exceeds range' do
     body = {
       'timezone' => 'UTC',
       'current_weather' => { 'temperature' => 25.0, 'time' => '2025-10-10T01:00' },
@@ -46,13 +48,14 @@ RSpec.describe OpenMeteoClient do
       },
       'hourly' => { 'time' => [], 'temperature_2m' => [] }
     }.to_json
-    stub_request(:get, /open-meteo/).to_return(status: 200, body: body, headers: { 'Content-Type' => 'application/json' })
+    stub_request(:get, /open-meteo/).to_return(status: 200, body: body,
+                                               headers: { 'Content-Type' => 'application/json' })
     r = described_class.forecast(lat: '0', lon: '0')
     expect(r[:high_c]).to eq(29.0)
     expect(r[:low_c]).to  eq(19.0)
   end
 
-  it "defaults to first daily when issued_at is nil" do
+  it 'defaults to first daily when issued_at is nil' do
     body = {
       'timezone' => 'UTC',
       'daily' => {
@@ -62,7 +65,8 @@ RSpec.describe OpenMeteoClient do
       },
       'hourly' => { 'time' => [], 'temperature_2m' => [] }
     }.to_json
-    stub_request(:get, /open-meteo/).to_return(status: 200, body: body, headers: { 'Content-Type' => 'application/json' })
+    stub_request(:get, /open-meteo/).to_return(status: 200, body: body,
+                                               headers: { 'Content-Type' => 'application/json' })
     r = described_class.forecast(lat: '0', lon: '0')
     expect(r[:high_c]).to eq(27.0)
     expect(r[:low_c]).to  eq(17.0)
