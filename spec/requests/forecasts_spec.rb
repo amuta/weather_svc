@@ -55,7 +55,7 @@ RSpec.describe 'Forecasts API', type: :request do
       it 'returns 502 with error message' do
         get '/api/forecast', params: { address: 'Invalid Address' }
         expect(response).to have_http_status(502)
-        expect(JSON.parse(response.body)).to eq({ 'error' => 'upstream error' })
+        expect(JSON.parse(response.body)).to eq({ 'error' => 'geocoder unavailable' })
       end
     end
   end

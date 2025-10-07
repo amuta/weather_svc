@@ -13,7 +13,7 @@ class ApplicationController < ActionController::API
     render json: { error: error.message }, status: 404
   end
 
-  def handle_upstream_error
-    render json: { error: 'upstream error' }, status: 502
+  def handle_upstream_error(error)
+    render json: { error: error.message }, status: 502
   end
 end

@@ -18,6 +18,6 @@ RSpec.describe 'Forecasts status mapping', type: :request do
     allow(GeocodeService).to receive(:call).and_raise(Errors::Upstream, 'geocoder unavailable')
     get '/api/forecast', params: { address: 'X' }
     expect(response).to have_http_status(502)
-    expect(JSON.parse(response.body)).to eq('error' => 'upstream error')
+    expect(JSON.parse(response.body)).to eq('error' => 'geocoder unavailable')
   end
 end
