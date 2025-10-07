@@ -192,8 +192,6 @@ curl "http://localhost:3000/api/forecast?address=InvalidAddress12345"
 ```bash
 bundle exec rspec
 ```
-**Coverage:** 100% lines (SimpleCov), open `coverage/index.html` after running tests.
-
 ## Architecture
 
 ### Layers
@@ -210,21 +208,6 @@ bundle exec rspec
 - **Forecasts**: 30-minute cache per zip code with 5-minute race condition protection
 - **Storage**: Rails.cache (MemoryStore in dev/test, configure Redis for production)
 - **Cache key**: Namespaced with SHA256 digest for consistent length
-
-### Production Considerations
-
-For production deployment:
-
-1. **Cache Store**: Configure Redis in `config/environments/production.rb`:
-   ```ruby
-   config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
-   ```
-
-2. **Rate Limiting**: Implement rate limiting for the API endpoint
-
-3. **Monitoring**: Add logging for cache hits, upstream latency, and errors
-
-4. **Geocoding**: Use a production geocoding service or self-hosted Nominatim
 
 ## Notes
 
