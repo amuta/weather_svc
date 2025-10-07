@@ -1,4 +1,4 @@
-require "digest"
+require 'digest'
 
 module Cache
   def self.key(area, id)

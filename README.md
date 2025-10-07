@@ -2,14 +2,27 @@
 
 A Rails API service that provides weather forecasts by address. It geocodes addresses using OpenStreetMap Nominatim and fetches weather data from Open-Meteo, with intelligent caching to minimize upstream API calls.
 
-## Features
+**Quick Start:**
+```bash
+curl "http://localhost:3000/api/forecast?address=1600+Pennsylvania+Avenue+NW,+Washington,+DC+20500"
+# => {"zip":"20500","current_c":26.1,"high_c":27.1,"low_c":16.0,"daily":[...],"issued_at":"2025-10-07T17:45","cached":false}
+```
 
-- Address-based weather lookup with automatic geocoding
-- Current temperature, daily high/low, and 7-day forecast
-- Optional hourly temperature data
-- 30-minute forecast caching per zip code
-- Cache hit/miss indicator
-- Timestamp for data staleness tracking
+
+
+## Assessment checklist
+
+* [x] **Rails API**: Rails API-only app.
+* [x] **Accepts address input**: `GET /api/forecast?address=...` (trimmed, max 512).
+* [x] **Retrieves forecast by zip**: address → geocode (Nominatim) → **zip** → forecast (Open-Meteo).
+* [x] **Current temperature**: `current_c`.
+* [x] **Bonus details**: `high_c`, `low_c`, `daily` 7-day; optional `hourly` via `hourly=true`.
+* [x] **30-minute caching by zip**: TTL 1800s, race TTL 300s, cache key = zip.
+* [x] **Cache indicator**: body `cached: true|false`, header `X-Cache: HIT|MISS`.
+* [x] **HTTP caching headers**: `Cache-Control: public, max-age=1800`.
+* [x] **Error handling**: `400` invalid input, `404` not found/no zip, `502` upstream.
+* [x] **Tests**: request + unit + client parsing + VCR; SimpleCov 100% lines.
+
 
 ## Requirements
 
@@ -45,14 +58,7 @@ HTTP_RETRIES=1
 HTTP_REDIRECTS=2
 HTTP_USER_AGENT=rails-weather-assessment
 CONTACT_EMAIL=your-email@example.com  # Required for Nominatim best practices
-
-# Units
-UNITS_METRIC=true
 ```
-
-### Important: Nominatim Usage Policy
-
-When using the public Nominatim service, set `CONTACT_EMAIL` to comply with their usage policy. For production, consider using a self-hosted Nominatim instance or a commercial geocoding service.
 
 ## Running the Application
 
@@ -147,7 +153,7 @@ curl "http://localhost:3000/api/forecast?address=1600+Pennsylvania+Avenue+NW,+Wa
 
 **Response Headers:**
 ```
-Cache-Control: max-age=1800, public
+Cache-Control: public, max-age=1800
 X-Cache: HIT
 ```
 

@@ -46,7 +46,8 @@ RSpec.describe Forecast do
 
     it 'caches forecast by zip code' do
       stub_forecast_ttls(main: 30.minutes, race: 5.minutes)
-      expect(Cache).to receive(:fetch).with(:forecast, '20000-000', ttl: 30.minutes, race_condition_ttl: 5.minutes).and_call_original
+      expect(Cache).to receive(:fetch).with(:forecast, '20000-000', ttl: 30.minutes,
+                                                                    race_condition_ttl: 5.minutes).and_call_original
 
       Forecast.fetch_by_location(location)
     end
@@ -84,15 +85,15 @@ RSpec.describe Forecast do
       result = forecast.to_h
 
       expect(result).to eq({
-        zip: '20000-000',
-        current_c: 26.5,
-        high_c: 29.0,
-        low_c: 20.0,
-        daily: [{ date: '2025-10-07', max_c: 29.0, min_c: 20.0 }],
-        hourly: [{ time: '2025-10-07T00:00', temp_c: 22.0 }],
-        issued_at: '2025-10-07T12:00:00Z',
-        cached: false
-      })
+                             zip: '20000-000',
+                             current_c: 26.5,
+                             high_c: 29.0,
+                             low_c: 20.0,
+                             daily: [{ date: '2025-10-07', max_c: 29.0, min_c: 20.0 }],
+                             hourly: [{ time: '2025-10-07T00:00', temp_c: 22.0 }],
+                             issued_at: '2025-10-07T12:00:00Z',
+                             cached: false
+                           })
     end
   end
 end

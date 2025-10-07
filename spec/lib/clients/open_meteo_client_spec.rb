@@ -19,19 +19,20 @@ RSpec.describe OpenMeteoClient do
 
   it "picks highs/lows for API-local 'today' near midnight" do
     body = {
-      "timezone"=>"America/Sao_Paulo",
-      "current_weather"=>{"temperature"=>21.0, "time"=>"2025-10-07T23:55"},
-      "daily"=> {
-        "time"=>["2025-10-07","2025-10-08"],
-        "temperature_2m_max"=>[29.0, 30.0],
-        "temperature_2m_min"=>[20.0, 19.0]
+      'timezone' => 'America/Sao_Paulo',
+      'current_weather' => { 'temperature' => 21.0, 'time' => '2025-10-07T23:55' },
+      'daily' => {
+        'time' => %w[2025-10-07 2025-10-08],
+        'temperature_2m_max' => [29.0, 30.0],
+        'temperature_2m_min' => [20.0, 19.0]
       },
-      "hourly"=> { "time"=>[], "temperature_2m"=>[] }
+      'hourly' => { 'time' => [], 'temperature_2m' => [] }
     }.to_json
 
-    stub_request(:get, /open-meteo/).to_return(status: 200, body: body, headers: { "Content-Type"=>"application/json" })
+    stub_request(:get, /open-meteo/).to_return(status: 200, body: body,
+                                               headers: { 'Content-Type' => 'application/json' })
 
-    r = OpenMeteoClient.forecast(lat: "-23.5", lon: "-46.6")
+    r = OpenMeteoClient.forecast(lat: '-23.5', lon: '-46.6')
     expect(r[:high_c]).to eq(29.0)
     expect(r[:low_c]).to eq(20.0)
   end

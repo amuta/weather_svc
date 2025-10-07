@@ -19,10 +19,10 @@ RSpec.describe GeocodeService do
         result = GeocodeService.call('Rio de Janeiro, RJ, Brazil')
 
         expect(result).to eq({
-          lat: '-22.9068',
-          lon: '-43.1729',
-          zip: '20000-000'
-        })
+                               lat: '-22.9068',
+                               lon: '-43.1729',
+                               zip: '20000-000'
+                             })
       end
     end
 
@@ -51,10 +51,10 @@ RSpec.describe GeocodeService do
 
       it 'caches accent-insensitive addresses' do
         with_memory_cache do
-          r = { lat: "1", lon: "2", zip: "01000-000" }
+          r = { lat: '1', lon: '2', zip: '01000-000' }
           expect(NominatimClient).to receive(:lookup).once.and_return(r)
-          a1 = GeocodeService.call("Sao Paulo")
-          a2 = GeocodeService.call("São Paulo")
+          a1 = GeocodeService.call('Sao Paulo')
+          a2 = GeocodeService.call('São Paulo')
           expect(a1).to eq(a2)
         end
       end
