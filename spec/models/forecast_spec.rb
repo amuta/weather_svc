@@ -47,12 +47,14 @@ RSpec.describe Forecast do
 
     it 'sets cached=false on miss and cached=true on hit' do
       with_memory_cache do
-        location = { lat: '-22.9068', lon: '-43.1729', zip: '99999-test' }
+        allow(OpenMeteoClient).to receive(:forecast).and_return(
+          { current_c: 1.2, high_c: 3.4, low_c: 0.5, daily: [] }
+        )
 
-        first = Forecast.fetch_by_location(location)
+        first  = Forecast.fetch_by_location(lat: '-22', lon: '-43', zip: '99999-test')
+        second = Forecast.fetch_by_location(lat: '-22', lon: '-43', zip: '99999-test')
+
         expect(first.cached).to eq(false)
-
-        second = Forecast.fetch_by_location(location)
         expect(second.cached).to eq(true)
       end
     end
