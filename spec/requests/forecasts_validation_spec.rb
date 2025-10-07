@@ -9,10 +9,8 @@ RSpec.describe 'Forecasts API', type: :request do
   end
 
   it 'trims whitespace and handles long input' do
-    location = { lat: '1', lon: '2', zip: '12345' }
     forecast = Forecast.new(current_c: 1, high_c: 2, low_c: 0, zip: '12345', cached: false, daily: [])
-    allow(GeocodeService).to receive(:call).with('Avenida Paulista').and_return(location)
-    allow(Forecast).to receive(:fetch_by_location).and_return(forecast)
+    allow(ForecastService).to receive(:call).with('Avenida Paulista', include_hourly: false).and_return(forecast)
 
     get '/api/forecast', params: { address: '   Avenida Paulista  ' }
     expect(response).to have_http_status(200)

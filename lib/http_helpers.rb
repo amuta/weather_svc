@@ -18,26 +18,30 @@ module HttpHelpers
   def self.get(uri, headers: {}, open_timeout: AppConfig.http_open_timeout,
                read_timeout: AppConfig.http_read_timeout, retries: AppConfig.http_retries,
                redirects: AppConfig.http_redirects)
-    attempt = 0
-    begin
-      attempt += 1
-      req = Net::HTTP::Get.new(uri)
-      req['User-Agent'] = user_agent
-      headers.each { |k, v| req[k] = v }
+    payload = { uri: uri.to_s, retries:, redirects: }
+    ActiveSupport::Notifications.instrument("http.get", payload) do
+      attempt = 0
+      begin
+        attempt += 1
+        req = Net::HTTP::Get.new(uri)
+        req['User-Agent'] = user_agent
+        headers.each { |k, v| req[k] = v }
 
-      Net::HTTP.start(uri.host, uri.port,
-                      use_ssl: uri.scheme == 'https',
-                      open_timeout:, read_timeout:) do |http|
-        res = http.request(req)
-        if redirects.positive? && res.is_a?(Net::HTTPRedirection) && (loc = res['location'])
-          return get(URI(loc), headers:, open_timeout:, read_timeout:, retries:, redirects: redirects - 1)
+        Net::HTTP.start(uri.host, uri.port,
+                        use_ssl: uri.scheme == 'https',
+                        open_timeout:, read_timeout:) do |http|
+          res = http.request(req)
+          payload[:status] = res.code.to_i
+          if redirects.positive? && res.is_a?(Net::HTTPRedirection) && (loc = res['location'])
+            return get(URI(loc), headers:, open_timeout:, read_timeout:, retries:, redirects: redirects - 1)
+          end
+
+          return res
         end
-
-        return res
+      rescue Timeout::Error, Errno::ECONNRESET, Errno::ETIMEDOUT, SocketError => e
+        retry if attempt <= retries
+        raise e
       end
-    rescue Timeout::Error, Errno::ECONNRESET, Errno::ETIMEDOUT, SocketError => e
-      retry if attempt <= retries
-      raise e
     end
   end
 

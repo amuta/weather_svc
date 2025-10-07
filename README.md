@@ -1,14 +1,13 @@
 # Weather Service API
 
-A Rails API service that provides weather forecasts by address. It geocodes addresses using OpenStreetMap Nominatim and fetches weather data from Open-Meteo, with intelligent caching to minimize upstream API calls.
+A Rails API service that provides weather forecasts by address. It geocodes addresses using OpenStreetMap Nominatim and fetches weather data from Open-Meteo, with caching to minimize upstream API calls.
 
 **Quick Start:**
 ```bash
+bundle install && rails s -d # Bundle & Start Server
 curl "http://localhost:3000/api/forecast?address=1600+Pennsylvania+Avenue+NW,+Washington,+DC+20500"
 # => {"zip":"20500","current_c":26.1,"high_c":27.1,"low_c":16.0,"daily":[...],"issued_at":"2025-10-07T17:45","cached":false}
 ```
-
-
 
 ## Assessment checklist
 
@@ -22,7 +21,6 @@ curl "http://localhost:3000/api/forecast?address=1600+Pennsylvania+Avenue+NW,+Wa
 * [x] **HTTP caching headers**: `Cache-Control: public, max-age=1800`.
 * [x] **Error handling**: `400` invalid input, `404` not found/no zip, `502` upstream.
 * [x] **Tests**: request + unit + client parsing + VCR; SimpleCov 100% lines.
-
 
 ## Requirements
 
@@ -200,9 +198,9 @@ bundle exec rspec
 
 ### Layers
 
-- **Controller** (`ForecastsController`): Handles HTTP requests, validates params, filters response
-- **Service** (`ForecastService`, `GeocodeService`): Orchestrates business logic
-- **Model** (`Forecast`): Value object with caching logic
+- **Controller** (`ForecastsController`): Handles HTTP requests, validates params, sets headers
+- **Service** (`ForecastService`, `GeocodeService`): Orchestrates business logic, caching, upstream calls
+- **Model** (`Forecast`): Pure data transfer object (DTO)
 - **Clients** (`NominatimClient`, `OpenMeteoClient`): HTTP API integrations
 - **Helpers** (`HttpHelpers`, `Cache`): Shared utilities
 
@@ -232,7 +230,7 @@ For production deployment:
 
 - **No database or Redis required** - Uses in-memory cache for simplicity.
 - **Caching by zip code** - Maximizes cache hit rate since many addresses map to the same zip.
-- **Hourly data filtering** - Always fetches and caches full data, filters at the model boundary based on `include_hourly` param to avoid cache fragmentation.
+- **Hourly data filtering** - Always fetches and caches full data, filters at the service layer based on `include_hourly` param to avoid cache fragmentation.
 
 ## License
 

@@ -7,11 +7,15 @@ module Cache
 
   def self.fetch(area, id, ttl:, race_condition_ttl: nil)
     ran = false
-    value = Rails.cache.fetch(key(area, id), expires_in: ttl, race_condition_ttl:) do
-      ran = true
-      yield
+    cache_key = key(area, id)
+    ActiveSupport::Notifications.instrument("cache.fetch", area:, key: cache_key, ttl:) do |payload|
+      value = Rails.cache.fetch(cache_key, expires_in: ttl, race_condition_ttl:) do
+        ran = true
+        yield
+      end
+      payload[:hit] = !ran
+      [value, !ran]
     end
-    [value, !ran]
   end
 
   def self.write(area, id, value, ttl:) = Rails.cache.write(key(area, id), value, expires_in: ttl)

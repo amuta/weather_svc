@@ -22,7 +22,7 @@ class OpenMeteoClient
 
     issued_date =
       begin
-        issued_at ? tz.parse(issued_at).to_date : nil
+        issued_at ? tz.parse(issued_at)&.to_date : nil
       rescue ArgumentError, TypeError
         nil
       end
