@@ -3,7 +3,7 @@
 Rails API that geocodes an address with OpenStreetMap Nominatim and returns a forecast from Open-Meteo. Caches by ZIP/postcode to reduce upstream calls.
 
 ## Requirements
-- Ruby 3.3.x (add `.ruby-version` and `ruby "3.3.x"` in Gemfile)
+- Ruby 3.3.x
 - Rails 8.0.x
 - Bundler 2.5.x
 
